@@ -1,59 +1,86 @@
-# -*- coding: utf-8 -*-
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import Select
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import NoAlertPresentException
-import unittest, time, re
+package com.example.tests;
 
-class RegTest(unittest.TestCase):
-    def setUp(self):
-        self.driver = webdriver.Firefox()
-        self.driver.implicitly_wait(30)
-        self.base_url = "https://www.somesite.com/"
-        self.verificationErrors = []
-        self.accept_next_alert = True
-    
-    def test_reg(self):
-        driver = self.driver
-        driver.get("https://www.somesite.com")
-        driver.find_element_by_css_selector("SomeCssSelector").click()
-        driver.find_element_by_link_text("Register").click()
-        driver.find_element_by_id("FirstID").clear()
-        driver.find_element_by_id("FirstID").send_keys("FirstName")
-        driver.find_element_by_id("SecondID").clear()
-        driver.find_element_by_id("SecondID").send_keys("LastName")
-        driver.find_element_by_id("ThridID").clear()
-        driver.find_element_by_id("ThridID").send_keys("Your-email@dot.com")
-        driver.find_element_by_id("FourthID").clear()
-        driver.find_element_by_id("FourthID").send_keys("Your-email@dot.com")
-        driver.find_element_by_xpath("//SomeXpath").clear()
-        driver.find_element_by_xpath("//SomeXpath").send_keys("Your_Password")
-        driver.find_element_by_xpath("//AnotherXpath").clear()
-        driver.find_element_by_xpath("//AnotherXpath").send_keys("Your_Password")
-        driver.find_element_by_name("SomeNameOfElement").click()
-    
-    def is_element_present(self, how, what):
-        try: self.driver.find_element(by=how, value=what)
-        except NoSuchElementException as e: return False
-        return True
-    
-    def is_alert_present(self):
-        try: self.driver.switch_to_alert()
-        except NoAlertPresentException as e: return False
-        return True
-    
-    def close_alert_and_get_its_text(self):
-        try:
-            alert = self.driver.switch_to_alert()
-            alert_text = alert.text
-            if self.accept_next_alert:
-                alert.accept()
-            else:
-                alert.dismiss()
-            return alert_text
-        finally: self.accept_next_alert = True
-    
-if __name__ == "__main__":
-    unittest.main()
+import java.util.regex.Pattern;
+import java.util.concurrent.TimeUnit;
+import org.junit.*;
+import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
+import org.openqa.selenium.*;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.Select;
+
+public class RegTest {
+  private WebDriver driver;
+  private String baseUrl;
+  private boolean acceptNextAlert = true;
+  private StringBuffer verificationErrors = new StringBuffer();
+
+  @Before
+  public void setUp() throws Exception {
+    driver = new FirefoxDriver();
+    baseUrl = "https://www.somesite.com/";
+    driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+  }
+
+  @Test
+  public void testReg() throws Exception {
+    driver.get("https://www.somesite.com/");
+    driver.findElement(By.cssSelector("SomeCssSelector")).click();
+    driver.findElement(By.linkText("Register")).click();
+    driver.findElement(By.id("FirstID")).clear();
+    driver.findElement(By.id("FirstID")).sendKeys("FirstName");
+    driver.findElement(By.id("SecondID")).clear();
+    driver.findElement(By.id("SecondID")).sendKeys("LastName");
+    driver.findElement(By.id("ThridID")).clear();
+    driver.findElement(By.id("ThridID")).sendKeys("Your-email@dot.com");
+    driver.findElement(By.id("FourthID")).clear();
+    driver.findElement(By.id("FourthID")).sendKeys("Your-email@dot.com");
+    driver.findElement(By.xpath("//SomeXpath")).clear();
+    driver.findElement(By.xpath("//SomeXpath")).sendKeys("Your_Password");
+    driver.findElement(By.xpath("//AnotherXpath")).clear();
+    driver.findElement(By.xpath("//AnotherXpath")).sendKeys("Your_Password");
+    driver.findElement(By.name("SomeNameOfButton")).click();
+  }
+
+  @After
+  public void tearDown() throws Exception {
+    driver.quit();
+    String verificationErrorString = verificationErrors.toString();
+    if (!"".equals(verificationErrorString)) {
+      fail(verificationErrorString);
+    }
+  }
+
+  private boolean isElementPresent(By by) {
+    try {
+      driver.findElement(by);
+      return true;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+  }
+
+  private boolean isAlertPresent() {
+    try {
+      driver.switchTo().alert();
+      return true;
+    } catch (NoAlertPresentException e) {
+      return false;
+    }
+  }
+
+  private String closeAlertAndGetItsText() {
+    try {
+      Alert alert = driver.switchTo().alert();
+      String alertText = alert.getText();
+      if (acceptNextAlert) {
+        alert.accept();
+      } else {
+        alert.dismiss();
+      }
+      return alertText;
+    } finally {
+      acceptNextAlert = true;
+    }
+  }
+}
