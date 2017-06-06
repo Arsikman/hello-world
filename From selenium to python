@@ -32,7 +32,7 @@ class RegTest(unittest.TestCase):
         driver.find_element_by_xpath("//SomeXpath").send_keys("Your_Password")
         driver.find_element_by_xpath("//AnotherXpath").clear()
         driver.find_element_by_xpath("//AnotherXpath").send_keys("Your_Password")
-        driver.find_element_by_name("SomeNameOfElement").click()
+        driver.find_element_by_name("SomeNameOfButton").click()
     
     def is_element_present(self, how, what):
         try: self.driver.find_element(by=how, value=what)
