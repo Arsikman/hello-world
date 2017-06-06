@@ -1,86 +1,29 @@
-package com.example.tests;
+package com.mycompany.app;
 
-import java.util.regex.Pattern;
-import java.util.concurrent.TimeUnit;
-import org.junit.*;
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
-import org.openqa.selenium.*;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.ui.Select;
 
-public class RegTest {
-  private WebDriver driver;
-  private String baseUrl;
-  private boolean acceptNextAlert = true;
-  private StringBuffer verificationErrors = new StringBuffer();
+        import com.codeborne.selenide.Configuration;
+        import org.junit.*;
+        import org.openqa.selenium.By;
 
-  @Before
-  public void setUp() throws Exception {
-    driver = new FirefoxDriver();
-    baseUrl = "https://www.somesite.com/";
-    driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-  }
+        import static com.codeborne.selenide.Screenshots.takeScreenShot;
+        import static com.codeborne.selenide.Selenide.$;
+        import static com.codeborne.selenide.Selenide.*;
 
-  @Test
-  public void testReg() throws Exception {
-    driver.get("https://www.somesite.com/");
-    driver.findElement(By.cssSelector("SomeCssSelector")).click();
-    driver.findElement(By.linkText("Register")).click();
-    driver.findElement(By.id("FirstID")).clear();
-    driver.findElement(By.id("FirstID")).sendKeys("FirstName");
-    driver.findElement(By.id("SecondID")).clear();
-    driver.findElement(By.id("SecondID")).sendKeys("LastName");
-    driver.findElement(By.id("ThridID")).clear();
-    driver.findElement(By.id("ThridID")).sendKeys("Your-email@dot.com");
-    driver.findElement(By.id("FourthID")).clear();
-    driver.findElement(By.id("FourthID")).sendKeys("Your-email@dot.com");
-    driver.findElement(By.xpath("//SomeXpath")).clear();
-    driver.findElement(By.xpath("//SomeXpath")).sendKeys("Your_Password");
-    driver.findElement(By.xpath("//AnotherXpath")).clear();
-    driver.findElement(By.xpath("//AnotherXpath")).sendKeys("Your_Password");
-    driver.findElement(By.name("SomeNameOfButton")).click();
-  }
-
-  @After
-  public void tearDown() throws Exception {
-    driver.quit();
-    String verificationErrorString = verificationErrors.toString();
-    if (!"".equals(verificationErrorString)) {
-      fail(verificationErrorString);
+public class MyTest {
+    @Test
+    public void testReg() {
+        Configuration.browser = "marionette";
+        open("https://www.somesite.com/");
+        $(By.cssSelector("SomeCssSelector")).click();
+        $(By.linkText("Register")).click();
+        $(By.id("FirstID")).setValue("FirstName");
+        $(By.id("SecondID")).setValue("LastName");
+        $(By.id("ThridID")).setValue("Your-email@dot.com");
+        $(By.id("FourthID")).setValue("Your-email@dot.com");
+        $(By.xpath("//SomeXpath")).setValue("Your_Password");
+        $(By.xpath("//AnotherXpath")).setValue("Your_Password");
+        $(By.name("SomeNameOfButton")).click();
+        sleep(2000);
+        takeScreenShot("ScreenShot.png");
     }
-  }
-
-  private boolean isElementPresent(By by) {
-    try {
-      driver.findElement(by);
-      return true;
-    } catch (NoSuchElementException e) {
-      return false;
-    }
-  }
-
-  private boolean isAlertPresent() {
-    try {
-      driver.switchTo().alert();
-      return true;
-    } catch (NoAlertPresentException e) {
-      return false;
-    }
-  }
-
-  private String closeAlertAndGetItsText() {
-    try {
-      Alert alert = driver.switchTo().alert();
-      String alertText = alert.getText();
-      if (acceptNextAlert) {
-        alert.accept();
-      } else {
-        alert.dismiss();
-      }
-      return alertText;
-    } finally {
-      acceptNextAlert = true;
-    }
-  }
 }
